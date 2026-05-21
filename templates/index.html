@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WikiRace — Race Through Wikipedia</title>
+  <link rel="icon" type="image/png" href="/static/logo.png" />
+  <meta property="og:title" content="WikiRace — Race Through Wikipedia" />
+  <meta property="og:description" content="Navigate Wikipedia links from start to target in this high-speed digital sprint." />
+  <meta property="og:image" content="/static/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="/static/thumbnail.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body class="home-page">
+  <div id="custom-cursor" aria-hidden="true"></div>
+  <div class="bg-grid"></div>
+  <div class="home-aurora" aria-hidden="true"></div>
+  <div class="home-speedlines" aria-hidden="true"></div>
+  <div class="perspective-grid" aria-hidden="true"></div>
+
+  <main class="home-main">
+    <header class="home-header">
+      <div class="home-badge">Live Wikipedia sprint</div>
+      <img class="logo" src="/static/logo.png" alt="Wikirace.ai" />
+      <p class="tagline">Navigate Wikipedia links from start to target.</p>
+      <div class="header-nav" style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+        <a href="/visualize" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 50px;">
+          <span>Explore Semantic Space</span>
+          <span class="btn-arrow" aria-hidden="true">-></span>
+        </a>
+        <a href="/links" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; border-radius: 50px;">
+          <span>Resources</span>
+          <span class="btn-arrow" aria-hidden="true">-></span>
+        </a>
+      </div>
+    </header>
+
+    <section class="hero-race" aria-label="Race preview">
+      <div class="race-orbit" aria-hidden="true">
+        <span class="orbit-node node-start"></span>
+        <span class="orbit-node node-mid node-a"></span>
+        <span class="orbit-node node-mid node-b"></span>
+        <span class="orbit-node node-target"></span>
+        <span class="orbit-runner"></span>
+      </div>
+      <div class="hero-race-copy">
+        <span>Explore</span>
+        <strong>connect</strong>
+        <span>finish fast</span>
+      </div>
+    </section>
+
+    {% if error %}
+    <div class="error-banner">
+      <span class="error-icon">⚠</span> {{ error }}
+    </div>
+    {% endif %}
+
+    {% if active_game %}
+    <div class="resume-banner">
+      <div class="resume-info">
+        <span class="resume-label">Game in progress</span>
+        <span class="resume-path">
+          <b>{{ active_game.start_article }}</b> <span aria-hidden="true">-></span> <b>{{ active_game.target_article }}</b>
+        </span>
+      </div>
+      <a href="/game" class="btn btn-resume">Resume</a>
+    </div>
+    {% endif %}
+
+    <div class="mode-tabs">
+      <button class="tab-btn active" data-tab="random">Random</button>
+      <button class="tab-btn" data-tab="custom">Custom</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-random">
+      <form action="/new_game" method="post" class="game-form">
+        <input type="hidden" name="mode" value="random" />
+        <p class="mode-desc">
+          Two Wikipedia articles are chosen at random.<br />
+          Can you find a path between them?
+        </p>
+        <div class="field-row">
+          <label for="player-email-random">Your email for Wikimedia requests</label>
+          <input type="email" id="player-email-random" name="player_email"
+                 placeholder="you@example.com" autocomplete="email"
+                 value="{{ player_email or '' }}" required />
+        </div>
+        <div class="random-preview" id="random-preview">
+          <div class="rp-article">
+            <span class="rp-label">Start</span>
+            <span class="rp-title" id="rp-start">—</span>
+          </div>
+          <div class="rp-arrow" aria-hidden="true">-></div>
+          <div class="rp-article">
+            <span class="rp-label">Target</span>
+            <span class="rp-title" id="rp-target">—</span>
+          </div>
+          <button type="button" class="btn-icon btn-reroll" id="btn-reroll" title="Get new pair" aria-label="Get new pair">New</button>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn-start-random">
+          <span>Start Race</span>
+          <span class="btn-arrow" aria-hidden="true">-></span>
+        </button>
+      </form>
+    </div>
+
+    <div class="tab-panel" id="tab-custom">
+      <form action="/new_game" method="post" class="game-form">
+        <input type="hidden" name="mode" value="custom" />
+        <div class="field-row">
+          <label for="player-email-custom">Your email for Wikimedia requests</label>
+          <input type="email" id="player-email-custom" name="player_email"
+                 placeholder="you@example.com" autocomplete="email"
+                 value="{{ player_email or '' }}" required />
+        </div>
+        <div class="field-row">
+          <label for="start">Start article</label>
+          <input type="text" id="start" name="start"
+                 placeholder="e.g. Banana" autocomplete="off" />
+        </div>
+        <div class="field-row">
+          <label for="target">Target article</label>
+          <input type="text" id="target" name="target"
+                 placeholder="e.g. Black hole" autocomplete="off" />
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span>Start Race</span>
+          <span class="btn-arrow" aria-hidden="true">-></span>
+        </button>
+      </form>
+    </div>
+
+    <div class="feature-strip" aria-label="Game features">
+      <div>
+        <span class="feature-value">01</span>
+        <span class="feature-label">Random routes</span>
+      </div>
+      <div>
+        <span class="feature-value">Live</span>
+        <span class="feature-label">Article jumps</span>
+      </div>
+      <div>
+        <span class="feature-value">Path</span>
+        <span class="feature-label">Replay on win</span>
+      </div>
+    </div>
+
+    <div class="rules-card">
+      <h3>How to play</h3>
+      <ol>
+        <li>You start on one Wikipedia article.</li>
+        <li>Click the blue links to jump to other articles.</li>
+        <li>Reach the <strong>target article</strong> in as few clicks as possible.</li>
+        <li>The stopwatch tracks your time, so move quickly.</li>
+      </ol>
+    </div>
+
+  </main>
+
+  <script src="/static/js/background.js"></script>
+  <script>
+    // ── Tab switching ─────────────────────────────────────────────────────────
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn, .tab-panel").forEach(el =>
+          el.classList.remove("active")
+        );
+        btn.classList.add("active");
+        document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // ── Random pair preview ───────────────────────────────────────────────────
+    function getPlayerEmail() {
+      return (
+        document.getElementById("player-email-random")?.value ||
+        document.getElementById("player-email-custom")?.value ||
+        ""
+      ).trim();
+    }
+
+    function syncPlayerEmail(value) {
+      const email = value.trim().toLowerCase();
+      if (email) localStorage.setItem("wikirace.playerEmail", email);
+      document.querySelectorAll('input[name="player_email"]').forEach(input => {
+        if (input.value !== value) input.value = value;
+      });
+    }
+
+    const savedPlayerEmail = localStorage.getItem("wikirace.playerEmail") || "";
+    if (savedPlayerEmail && !getPlayerEmail()) {
+      syncPlayerEmail(savedPlayerEmail);
+    }
+
+    document.querySelectorAll('input[name="player_email"]').forEach(input => {
+      input.addEventListener("input", () => syncPlayerEmail(input.value));
+    });
+
+    async function loadPair() {
+      const btn = document.getElementById("btn-reroll");
+      const email = getPlayerEmail();
+      if (!email) {
+        document.getElementById("rp-start").textContent  = "Enter email";
+        document.getElementById("rp-target").textContent = "then reroll";
+        return;
+      }
+      btn.classList.add("spinning");
+      document.getElementById("rp-start").textContent  = "…";
+      document.getElementById("rp-target").textContent = "…";
+      try {
+        const params = new URLSearchParams({ player_email: email });
+        const res  = await fetch(`/api/random_pair?${params}`);
+        if (!res.ok) throw new Error("Could not load random pair");
+        const data = await res.json();
+        document.getElementById("rp-start").textContent  = data.start;
+        document.getElementById("rp-target").textContent = data.target;
+        // Inject hidden fields so the random pair is used
+        const form = document.querySelector("#tab-random form");
+        let sInput = form.querySelector('input[name="start"]');
+        if (!sInput) { sInput = document.createElement("input"); sInput.type="hidden"; sInput.name="start"; form.appendChild(sInput); }
+        let tInput = form.querySelector('input[name="target"]');
+        if (!tInput) { tInput = document.createElement("input"); tInput.type="hidden"; tInput.name="target"; form.appendChild(tInput); }
+        sInput.value = data.start;
+        tInput.value = data.target;
+        // Switch to custom mode so Flask uses the pair we pre-fetched
+        form.querySelector('input[name="mode"]').value = "custom";
+      } catch(e) {
+        document.getElementById("rp-start").textContent  = "Error";
+        document.getElementById("rp-target").textContent = "retry";
+      } finally {
+        btn.classList.remove("spinning");
+      }
+    }
+    document.getElementById("btn-reroll").addEventListener("click", loadPair);
+    loadPair();
+    function initCustomCursor() {
+      const cursor = document.getElementById("custom-cursor");
+      const finePointer = window.matchMedia("(pointer: fine)");
+      if (!cursor || !finePointer.matches) return;
+
+      const setStateFor = target => {
+        const textTarget = target?.closest?.("input, textarea, [contenteditable='true']");
+        const interactive = target?.closest?.("a, button, input, textarea, select, label, [role='button'], [tabindex]:not([tabindex='-1'])");
+        cursor.classList.toggle("text", Boolean(textTarget));
+        cursor.classList.toggle("hovered", Boolean(interactive) && !textTarget);
+      };
+
+      window.addEventListener("pointermove", e => {
+        cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
+        cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
+        cursor.classList.add("is-visible");
+        setStateFor(e.target);
+      }, { passive: true });
+
+      document.addEventListener("pointerover", e => setStateFor(e.target), { passive: true });
+      document.addEventListener("pointerout", e => {
+        if (!e.relatedTarget) cursor.classList.remove("hovered", "text");
+      }, { passive: true });
+      document.addEventListener("pointerdown", () => cursor.classList.add("clicking"));
+      document.addEventListener("pointerup", () => cursor.classList.remove("clicking"));
+      document.addEventListener("pointercancel", () => cursor.classList.remove("clicking"));
+      document.addEventListener("mouseleave", () => cursor.classList.remove("is-visible", "hovered", "text", "clicking"));
+    }
+    initCustomCursor();
+  </script>
+</body>
+</html>

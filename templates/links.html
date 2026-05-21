@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WikiRace — Knowledge Resources</title>
+  <link rel="icon" type="image/png" href="/static/logo.png" />
+  <meta property="og:title" content="WikiRace — Resources" />
+  <meta property="og:image" content="/static/thumbnail.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="links-page">
+  <div id="custom-cursor" aria-hidden="true"></div>
+  <div class="bg-grid"></div>
+  <div class="home-aurora" aria-hidden="true"></div>
+  <div class="perspective-grid" aria-hidden="true"></div>
+
+  <main class="links-main">
+    <header class="links-header">
+      <a href="/" class="btn-back" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-muted); font-weight: 600; margin-bottom: 2rem;">
+        <span class="btn-arrow">←</span>
+        <span>Back to Race</span>
+      </a>
+      <h1 class="links-title">Resources</h1>
+      <p class="links-subtitle">Explore the digital architecture and external intelligence nodes of the WikiRace network.</p>
+    </header>
+
+    <div class="links-grid">
+      <!-- Link 1: Embedding Projector -->
+      <a href="https://projector.tensorflow.org/" target="_blank" class="link-card">
+        <div class="link-image">
+          <div class="link-image-placeholder">
+            <i data-lucide="layers" class="link-icon"></i>
+          </div>
+        </div>
+        <div class="link-content">
+          <h2 class="link-card-title">Embedding Projector</h2>
+          <p class="link-card-desc">Google's high-dimensional data visualization tool. Explore how machine learning models perceive semantic relationships.</p>
+          <div class="link-card-footer">Launch Projector</div>
+        </div>
+      </a>
+
+      <!-- Link 2: Embedding Visualizer -->
+      <a href="https://embeddings.reiniss.com/" target="_blank" class="link-card">
+        <div class="link-image">
+          <div class="link-image-placeholder">
+            <i data-lucide="search" class="link-icon"></i>
+          </div>
+        </div>
+        <div class="link-content">
+          <h2 class="link-card-title">Word Embeddings</h2>
+          <p class="link-card-desc">An interactive visualizer for word embeddings, allowing for deep exploration of linguistic clusters and vector space.</p>
+          <div class="link-card-footer">Explore Vectors</div>
+        </div>
+      </a>
+
+      <!-- Link 3: AI Wiki Embeddings -->
+      <a href="https://aiwiki.ai/wiki/embeddings" target="_blank" class="link-card">
+        <div class="link-image">
+          <div class="link-image-placeholder">
+            <i data-lucide="book-open" class="link-icon"></i>
+          </div>
+        </div>
+        <div class="link-content">
+          <h2 class="link-card-title">AI Wiki: Embeddings</h2>
+          <p class="link-card-desc">A comprehensive guide to the theory and implementation of embeddings within modern artificial intelligence.</p>
+          <div class="link-card-footer">Read Theory</div>
+        </div>
+      </a>
+
+      <!-- Link 4: GitHub Repository -->
+      <a href="https://github.com/Anasarfeen123/Wikirace" target="_blank" class="link-card">
+        <div class="link-image">
+          <div class="link-image-placeholder">
+            <i data-lucide="github" class="link-icon"></i>
+          </div>
+        </div>
+        <div class="link-content">
+          <h2 class="link-card-title">Project Repository</h2>
+          <p class="link-card-desc">Access the full source code, technical documentation, and development history of the Wikirace-web platform on GitHub.</p>
+          <div class="link-card-footer">View on GitHub</div>
+        </div>
+      </a>
+
+      <!-- Link 5: Canva Presentation -->
+      <a href="https://canva.link/r1rlm9rcxiu1vz7" target="_blank" class="link-card">
+        <div class="link-image">
+          <div class="link-image-placeholder">
+            <i data-lucide="layout" class="link-icon"></i>
+          </div>
+        </div>
+        <div class="link-content">
+          <h2 class="link-card-title">Project Overview</h2>
+          <p class="link-card-desc">A visual presentation detailing the design language, technical architecture, and project goals of the WikiRace network.</p>
+          <div class="link-card-footer">View Presentation</div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <script src="/static/js/background.js"></script>
+  <script>
+    lucide.createIcons();
+    function initCustomCursor() {
+      const cursor = document.getElementById("custom-cursor");
+      if (!cursor) return;
+      window.addEventListener("pointermove", e => {
+        cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
+        cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
+        cursor.classList.add("is-visible");
+      }, { passive: true });
+    }
+    initCustomCursor();
+  </script>
+</body>
+</html>
