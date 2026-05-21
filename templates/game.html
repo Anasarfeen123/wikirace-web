@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WikiRace — {{ game.start_article }} → {{ game.target_article }}</title>
+  <link rel="icon" type="image/png" href="/static/logo.png" />
+  <meta property="og:title" content="WikiRace — {{ game.start_article }} → {{ game.target_article }}" />
+  <meta property="og:image" content="/static/thumbnail.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <!-- Wikipedia content styles (subset) -->
+  <link rel="stylesheet" href="https://en.wikipedia.org/w/load.php?modules=mediawiki.legacy.commonPrint,mediawiki.skinning.content.parsoid&skin=vector&only=styles" crossorigin />
+</head>
+<body class="game-page {% if game.is_over %}game-over{% endif %}">
+<div id="custom-cursor" aria-hidden="true"></div>
+<div class="bg-grid"></div>
+<div class="home-aurora" aria-hidden="true"></div>
+<div class="game-speedlines" aria-hidden="true"></div>
+<div class="cursor-trail-layer" id="cursor-trail-layer" aria-hidden="true"></div>
+
+<!-- ══ HUD ══════════════════════════════════════════════════════════════════ -->
+<header id="hud">
+  <a class="hud-brand" href="/" title="Back to setup">
+    <img src="/static/logo.png" alt="WikiRace" />
+  </a>
+
+  <div class="hud-section hud-start">
+    <span class="hud-pill-label">START</span>
+    <span class="hud-article-name" title="{{ game.start_article }}">{{ game.start_article }}</span>
+  </div>
+
+  <div class="hud-route-line" aria-hidden="true">
+    <span></span>
+  </div>
+
+  <div class="hud-center">
+    <div class="stopwatch-wrap">
+      <div id="stopwatch" class="stopwatch">
+        {{ "%.2f"|format(game.elapsed) if game.is_over else "00.00" }}
+      </div>
+      <div class="hud-clicks">
+        <span id="click-count">{{ game.clicks }}</span> <span class="hud-clicks-label">clicks</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hud-section hud-target">
+    <span class="hud-pill-label target-label">TARGET</span>
+    <span class="hud-article-name target-name" title="{{ game.target_article }}">{{ game.target_article }}</span>
+  </div>
+
+  <div class="hud-actions">
+    <button id="btn-sidebar" class="btn-icon-hud btn-path" title="Toggle path history" aria-label="Toggle path history">
+      <span class="path-icon">☰</span>
+      <span class="path-action-label">Path</span>
+    </button>
+    {% if not game.is_over %}
+    <button id="btn-give-up" class="btn-hud-danger" title="Give up">Give up</button>
+    {% else %}
+    <a href="/" class="btn-hud-home">Home</a>
+    {% endif %}
+  </div>
+
+  <div class="hud-progress" aria-hidden="true">
+    <span id="hud-progress-bar"></span>
+  </div>
+</header>
+
+<!-- ══ LAYOUT ════════════════════════════════════════════════════════════════ -->
+<div id="layout">
+
+  <!-- Sidebar: path history -->
+  <aside id="sidebar" class="sidebar-closed">
+    <div class="sidebar-inner">
+      <div class="sidebar-header">
+        <div>
+          <h2>Your Path</h2>
+          <p>{{ game.clicks }} click{{ 's' if game.clicks != 1 }}</p>
+        </div>
+        <button id="btn-close-sidebar" class="btn-icon-small" aria-label="Close path history">✕</button>
+      </div>
+      <ol id="path-list">
+        {% for step in game.path %}
+        <li class="{{ 'path-current' if loop.last else '' }}">
+          <span class="path-index">{{ loop.index }}</span>
+          <span class="path-title">{{ step }}</span>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div id="content-wrap">
+
+    <!-- Article header (inside page, not HUD) -->
+    <div id="article-header">
+      <div class="article-kicker">
+        <span class="article-status-dot"></span>
+        <span>Current article</span>
+        <span class="article-kicker-separator">/</span>
+        <span class="article-target-inline">Target: {{ game.target_article }}</span>
+      </div>
+      <h1 id="article-title">
+        {% if article %}{{ article.display_title | safe }}{% else %}{{ game.current_article }}{% endif %}
+      </h1>
+      {% if not game.is_over %}
+      <div class="article-subbar">
+        <button id="btn-path-inline" class="btn-subtle" type="button">View path</button>
+        <span>{{ game.clicks }} click{{ 's' if game.clicks != 1 }} so far</span>
+        <span id="link-count-badge" class="link-count-badge">Scanning links</span>
+      </div>
+      {% endif %}
+      {% if game.is_over and game.status == "given_up" %}
+      <div class="article-banner banner-giveup">You gave up after {{ game.clicks }} click{{ 's' if game.clicks != 1 }}.</div>
+      {% endif %}
+    </div>
+
+    <!-- Spinner -->
+    <div id="nav-spinner" class="hidden">
+      <div class="spinner-ring"></div>
+      <span>Loading article…</span>
+    </div>
+
+    <!-- Article body -->
+    <article id="article-body" class="mw-parser-output">
+      {% if article %}
+        {{ article.html | safe }}
+      {% else %}
+        <div class="article-error">
+          <p>Could not load the article. <a href="/game">Reload</a></p>
+        </div>
+      {% endif %}
+    </article>
+
+  </div>
+</div>
+
+<!-- ══ WIN MODAL ═════════════════════════════════════════════════════════════ -->
+<div id="win-overlay" class="{% if game.status == 'won' %}visible{% else %}hidden{% endif %}">
+  <div id="win-modal">
+    <div class="win-confetti" id="confetti-container"></div>
+    <div class="win-mark">W</div>
+    <h2 class="win-title">Target reached</h2>
+    <div class="win-stats">
+      <div class="win-stat">
+        <span class="win-stat-value" id="win-time">{{ game.elapsed_str if game.is_over else "—" }}</span>
+        <span class="win-stat-label">Time</span>
+      </div>
+      <div class="win-stat-divider"></div>
+      <div class="win-stat">
+        <span class="win-stat-value" id="win-clicks">{{ game.clicks }}</span>
+        <span class="win-stat-label">Clicks</span>
+      </div>
+    </div>
+
+    <!-- Path replay -->
+    <div class="win-path-label">Your path</div>
+    <ol id="win-path-list" class="win-path">
+      {% for step in game.path %}
+      <li>
+        <span class="wp-index">{{ loop.index }}</span>
+        <span class="wp-title {% if loop.first %}wp-start{% elif loop.last %}wp-end{% endif %}">{{ step }}</span>
+      </li>
+      {% endfor %}
+    </ol>
+
+    <div class="win-actions">
+      <a href="/" class="btn btn-primary">Play Again</a>
+      <button id="btn-copy-result" class="btn btn-secondary">Copy Result</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATA passed to JS ════════════════════════════════════════════════════ -->
+<script>
+  window.WIKIRACE = {
+    startTime:     {{ game.start_time }},
+    status:        "{{ game.status }}",
+    endTime:       {{ game.end_time or "null" }},
+    clicks:        {{ game.clicks }},
+    startArticle:  {{ game.start_article | tojson }},
+    targetArticle: {{ game.target_article | tojson }},
+    path:          {{ game.path | tojson }},
+    gameId:        {{ game.game_id | tojson }},
+    playerEmail:   {{ player_email | tojson }},
+  };
+</script>
+<script src="/static/js/background.js"></script>
+<script src="/static/js/game.js"></script>
+
+</body>
+</html>
