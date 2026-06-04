@@ -13,7 +13,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="links-page">
-  <div id="custom-cursor" aria-hidden="true"></div>
   <div class="bg-grid"></div>
   <div class="home-aurora" aria-hidden="true"></div>
   <div class="perspective-grid" aria-hidden="true"></div>
@@ -104,16 +103,6 @@
   <script src="/static/js/background.js"></script>
   <script>
     lucide.createIcons();
-    function initCustomCursor() {
-      const cursor = document.getElementById("custom-cursor");
-      if (!cursor) return;
-      window.addEventListener("pointermove", e => {
-        cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
-        cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
-        cursor.classList.add("is-visible");
-      }, { passive: true });
-    }
-    initCustomCursor();
   </script>
 </body>
 </html>

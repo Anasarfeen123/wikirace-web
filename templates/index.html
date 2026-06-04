@@ -15,7 +15,6 @@
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body class="home-page">
-  <div id="custom-cursor" aria-hidden="true"></div>
   <div class="bg-grid"></div>
   <div class="home-aurora" aria-hidden="true"></div>
   <div class="home-speedlines" aria-hidden="true"></div>
@@ -237,35 +236,6 @@
     }
     document.getElementById("btn-reroll").addEventListener("click", loadPair);
     loadPair();
-    function initCustomCursor() {
-      const cursor = document.getElementById("custom-cursor");
-      const finePointer = window.matchMedia("(pointer: fine)");
-      if (!cursor || !finePointer.matches) return;
-
-      const setStateFor = target => {
-        const textTarget = target?.closest?.("input, textarea, [contenteditable='true']");
-        const interactive = target?.closest?.("a, button, input, textarea, select, label, [role='button'], [tabindex]:not([tabindex='-1'])");
-        cursor.classList.toggle("text", Boolean(textTarget));
-        cursor.classList.toggle("hovered", Boolean(interactive) && !textTarget);
-      };
-
-      window.addEventListener("pointermove", e => {
-        cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
-        cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
-        cursor.classList.add("is-visible");
-        setStateFor(e.target);
-      }, { passive: true });
-
-      document.addEventListener("pointerover", e => setStateFor(e.target), { passive: true });
-      document.addEventListener("pointerout", e => {
-        if (!e.relatedTarget) cursor.classList.remove("hovered", "text");
-      }, { passive: true });
-      document.addEventListener("pointerdown", () => cursor.classList.add("clicking"));
-      document.addEventListener("pointerup", () => cursor.classList.remove("clicking"));
-      document.addEventListener("pointercancel", () => cursor.classList.remove("clicking"));
-      document.addEventListener("mouseleave", () => cursor.classList.remove("is-visible", "hovered", "text", "clicking"));
-    }
-    initCustomCursor();
   </script>
 </body>
 </html>

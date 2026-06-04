@@ -15,7 +15,6 @@
   <script>window.Plotly || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"><\/script>')</script>
 </head>
 <body class="visualize-page">
-  <div id="custom-cursor" aria-hidden="true"></div>
   <div class="bg-grid"></div>
   <div class="home-aurora" aria-hidden="true"></div>
 
@@ -183,18 +182,5 @@
     };
   </script>
   <script src="/static/js/visualizer.js"></script>
-  <script>
-    // Simple custom cursor for this page too
-    function initCustomCursor() {
-      const cursor = document.getElementById("custom-cursor");
-      if (!cursor) return;
-      window.addEventListener("pointermove", e => {
-        cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
-        cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
-        cursor.classList.add("is-visible");
-      }, { passive: true });
-    }
-    initCustomCursor();
-  </script>
 </body>
 </html>
