@@ -73,13 +73,11 @@ const playerEmail = (WR.playerEmail || localStorage.getItem("wikirace.playerEmai
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 if (playerEmail) localStorage.setItem("wikirace.playerEmail", playerEmail);
-initCustomCursor();
 stopwatch.start();
 attachLinkHandlers();
 document.body.classList.add("ui-ready");
 updateProgress();
 updateLinkCount();
-initCursorTrail();
 
 // Win modal auto-trigger
 if (WR.status === "won") {
@@ -129,7 +127,6 @@ async function handleLinkClick(e) {
 
   isNavigating = true;
   e.currentTarget.classList.add("link-launching");
-  burstAtEvent(e);
   showNavToast(article);
   showSpinner(true);
 
@@ -238,38 +235,6 @@ function showNavToast(article) {
   toast.classList.add("visible");
 }
 
-function burstAtEvent(e) {
-  const layer = $("cursor-trail-layer");
-  if (!layer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  for (let i = 0; i < 10; i++) {
-    const spark = document.createElement("span");
-    spark.className = "click-spark";
-    spark.style.left = `${e.clientX}px`;
-    spark.style.top = `${e.clientY}px`;
-    spark.style.setProperty("--dx", `${(Math.random() - .5) * 110}px`);
-    spark.style.setProperty("--dy", `${(Math.random() - .5) * 90}px`);
-    layer.appendChild(spark);
-    setTimeout(() => spark.remove(), 700);
-  }
-}
-
-function initCursorTrail() {
-  const layer = $("cursor-trail-layer");
-  if (!layer || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  let last = 0;
-  window.addEventListener("pointermove", e => {
-    const now = performance.now();
-    if (now - last < 55) return;
-    last = now;
-    const dot = document.createElement("span");
-    dot.className = "cursor-dot";
-    dot.style.left = `${e.clientX}px`;
-    dot.style.top = `${e.clientY}px`;
-    layer.appendChild(dot);
-    setTimeout(() => dot.remove(), 900);
-  }, { passive: true });
-}
-
 document.addEventListener("keydown", e => {
   if (e.key.toLowerCase() === "p" && btnSidebar) {
     toggleSidebar(sidebar.classList.contains("sidebar-closed"));
@@ -355,32 +320,4 @@ function escHtml(str) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-}
-function initCustomCursor() {
-  const cursor = $("custom-cursor");
-  const finePointer = window.matchMedia("(pointer: fine)");
-  if (!cursor || !finePointer.matches) return;
-
-  const setStateFor = target => {
-    const textTarget = target?.closest?.("input, textarea, [contenteditable='true']");
-    const interactive = target?.closest?.("a, button, input, textarea, select, label, [role='button'], [tabindex]:not([tabindex='-1'])");
-    cursor.classList.toggle("text", Boolean(textTarget));
-    cursor.classList.toggle("hovered", Boolean(interactive) && !textTarget);
-  };
-
-  window.addEventListener("pointermove", e => {
-    cursor.style.setProperty("--cursor-x", `${e.clientX}px`);
-    cursor.style.setProperty("--cursor-y", `${e.clientY}px`);
-    cursor.classList.add("is-visible");
-    setStateFor(e.target);
-  }, { passive: true });
-
-  document.addEventListener("pointerover", e => setStateFor(e.target), { passive: true });
-  document.addEventListener("pointerout", e => {
-    if (!e.relatedTarget) cursor.classList.remove("hovered", "text");
-  }, { passive: true });
-  document.addEventListener("pointerdown", () => cursor.classList.add("clicking"));
-  document.addEventListener("pointerup", () => cursor.classList.remove("clicking"));
-  document.addEventListener("pointercancel", () => cursor.classList.remove("clicking"));
-  document.addEventListener("mouseleave", () => cursor.classList.remove("is-visible", "hovered", "text", "clicking"));
 }

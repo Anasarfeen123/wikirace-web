@@ -160,6 +160,22 @@ a, button, [role="button"] { cursor: none; }
   }
 }
 
+body.game-page,
+body.game-page input,
+body.game-page textarea,
+body.game-page select {
+  cursor: auto !important;
+}
+
+body.game-page a,
+body.game-page button,
+body.game-page label,
+body.game-page [role="button"],
+body.game-page [tabindex]:not([tabindex="-1"]),
+body.game-page #article-body a.wikirace-link {
+  cursor: pointer !important;
+}
+
 ::selection {
   background: rgba(0,229,255,0.25);
   color: #fff;
@@ -1684,31 +1700,6 @@ kbd {
   0% { opacity: 0; transform: translate(-50%, 20px); }
   12%, 80% { opacity: 1; transform: translate(-50%, 0); }
   100% { opacity: 0; transform: translate(-50%, -8px); }
-}
-
-/* ── Cursor effects ─────────────────────────────────────────────────────── */
-.cursor-trail-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9998; }
-.cursor-dot, .click-spark {
-  position: fixed;
-  width: 5px; height: 5px;
-  border-radius: 999px;
-  transform: translate(-50%, -50%);
-}
-.cursor-dot {
-  background: var(--accent);
-  box-shadow: 0 0 10px rgba(0,229,255,0.6);
-  animation: cursor-fade 0.8s ease forwards;
-}
-.click-spark {
-  background: var(--target-col);
-  animation: spark-pop .6s ease forwards;
-}
-@keyframes cursor-fade { to { opacity: 0; transform: translate(-50%, -50%) scale(2.2); } }
-@keyframes spark-pop {
-  to {
-    opacity: 0;
-    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2);
-  }
 }
 
 /* ── UI ready animation ─────────────────────────────────────────────────── */
