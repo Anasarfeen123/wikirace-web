@@ -10,8 +10,8 @@ class GlobalBackground {
         
         this.ctx = this.canvas.getContext('2d');
         this.nodes = [];
-        this.nodeCount = 80; // More nodes for global coverage
-        this.maxDistance = 180;
+        this.nodeCount = 50; // Fewer nodes for a cleaner sketchbook look
+        this.maxDistance = 200;
         this.mouse = { x: null, y: null };
         
         this.init();
@@ -28,9 +28,9 @@ class GlobalBackground {
             this.nodes.push({
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                radius: Math.random() * 2 + 0.5
+                vx: (Math.random() - 0.5) * 0.3, // Slower, wandering movement
+                vy: (Math.random() - 0.5) * 0.3,
+                radius: Math.random() * 1.5 + 0.5
             });
         }
     }
@@ -59,13 +59,13 @@ class GlobalBackground {
             if (node.y < 0) node.y = this.canvas.height;
             if (node.y > this.canvas.height) node.y = 0;
             
-            // Draw node
+            // Draw node as pencil dot
+            this.ctx.fillStyle = 'rgba(44, 62, 80, 0.4)'; // Graphite grey
             this.ctx.beginPath();
             this.ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = 'rgba(0, 229, 255, 0.5)'; // Increased from 0.25
             this.ctx.fill();
             
-            // Draw lines
+            // Draw lines (sketchy pencil lines)
             for (let j = i + 1; j < this.nodes.length; j++) {
                 const other = this.nodes[j];
                 const dx = node.x - other.x;
@@ -76,9 +76,9 @@ class GlobalBackground {
                     this.ctx.beginPath();
                     this.ctx.moveTo(node.x, node.y);
                     this.ctx.lineTo(other.x, other.y);
-                    const alpha = (1 - dist / this.maxDistance) * 0.35; // Increased from 0.15
-                    this.ctx.strokeStyle = `rgba(0, 229, 255, ${alpha})`;
-                    this.ctx.lineWidth = 0.8; // Increased from 0.6
+                    const alpha = (1 - dist / this.maxDistance) * 0.15; // Very subtle lines
+                    this.ctx.strokeStyle = `rgba(44, 62, 80, ${alpha})`;
+                    this.ctx.lineWidth = 0.5; 
                     this.ctx.stroke();
                 }
             }
@@ -92,9 +92,9 @@ class GlobalBackground {
                     this.ctx.beginPath();
                     this.ctx.moveTo(node.x, node.y);
                     this.ctx.lineTo(this.mouse.x, this.mouse.y);
-                    const malpha = (1 - mdist / 150) * 0.5; // Increased from 0.2
-                    this.ctx.strokeStyle = `rgba(0, 229, 255, ${malpha})`;
-                    this.ctx.lineWidth = 1.2; // Increased from 0.8
+                    const malpha = (1 - mdist / 150) * 0.2; 
+                    this.ctx.strokeStyle = `rgba(41, 128, 185, ${malpha})`; // Blue pen hint
+                    this.ctx.lineWidth = 0.8;
                     this.ctx.stroke();
                 }
             }
