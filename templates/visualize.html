@@ -3,176 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WikiRace — Word Embeddings Visualizer</title>
+  <title>WikiRace — Semantic Map (Sketched)</title>
   <link rel="icon" type="image/png" href="/static/logo.png" />
-  <meta property="og:title" content="WikiRace — Semantic Space" />
-  <meta property="og:image" content="/static/thumbnail.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
   <!-- Plotly.js with backup CDN -->
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-  <script>window.Plotly || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"><\/script>')</script>
 </head>
 <body class="visualize-page">
-  <div class="bg-grid"></div>
-  <div class="home-aurora" aria-hidden="true"></div>
-
+  <div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;">
+    <button id="theme-toggle" class="sketch-btn" style="font-size: 0.9rem; padding: 5px 12px;">Toggle Ink</button>
+  </div>
+  
   <main class="visualize-main">
-    <header class="visualize-header">
-      <div class="header-left">
-        <a href="/" class="btn-back">
-          <span class="btn-arrow">←</span>
-          <span>Back</span>
-        </a>
-        <h1 class="visualize-title">Semantic Space</h1>
-      </div>
-      <div class="mode-selector">
-        <button id="btn-2d" class="mode-btn active">2D Projection</button>
-        <button id="btn-3d" class="mode-btn">3D Universe</button>
-      </div>
+    <header class="home-header">
+      <h1 class="logo-sketch" style="font-size: 3rem;">Semantic Map</h1>
+      <p class="tagline-sketch">A hand-drawn map of human knowledge.</p>
+      <nav style="margin-top: 1rem; display: flex; gap: 1.5rem; justify-content: center;">
+        <a href="/" class="hand-written">← Back to Menu</a>
+      </nav>
     </header>
 
-    <div class="visualize-container">
-      <div id="plot-area"></div>
-      <div id="plot-loader" class="plot-loader">
-        <div class="spinner-ring"></div>
-        <span>Mapping embeddings...</span>
+    <div class="sketch-box flex-center flex-gap-sm margin-bottom-sm" style="border-style: dashed;">
+      <button id="btn-2d" class="sketch-btn active" style="font-size: 1rem;">2D SKETCH</button>
+      <button id="btn-3d" class="sketch-btn" style="font-size: 1rem;">3D SPACE</button>
+    </div>
+
+    <div class="sketch-box" style="height: 500px; padding: 10px;">
+      <div id="plot-area" style="width: 100%; height: 100%;"></div>
+      <div id="plot-loader" class="flex-center" style="position: absolute; inset: 0; background: var(--bg); z-index: 10; flex-direction: column;">
+        <div class="hand-written" style="font-size: 1.5rem; color: var(--ink-blue);">DROWNING POINTS...</div>
       </div>
     </div>
 
-    <footer class="visualize-footer">
-      <p>Visualizing Wikipedia articles clustered by semantic similarity in high-dimensional space.</p>
+    <footer style="margin-top: 20px; text-align: center; font-family: var(--font-body); opacity: 0.7;">
+      <p>Articles are clustered by semantic similarity. Similar ideas stay close on the paper.</p>
     </footer>
   </main>
 
   <style>
-    .visualize-page {
-      background: var(--bg);
-      color: var(--text);
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .visualize-main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 2rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .visualize-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-    }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .btn-back {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-
-    .btn-back:hover {
-      color: var(--text);
-    }
-
-    .visualize-title {
-      font-family: var(--font-ui);
-      font-weight: 800;
-      font-size: 2.5rem;
-      margin: 0;
-      background: linear-gradient(to right, var(--text), var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .mode-selector {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 0.25rem;
-      border-radius: 100px;
-      display: flex;
-      gap: 0.25rem;
-    }
-
-    .mode-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      padding: 0.75rem 1.5rem;
-      border-radius: 100px;
-      cursor: pointer;
-      font-family: var(--font-ui);
-      font-weight: 700;
-      font-size: 0.9rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .mode-btn.active {
-      background: var(--accent);
-      color: var(--bg);
-      box-shadow: var(--glow-accent);
-    }
-
-    .visualize-container {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
-    }
-
-    #plot-area {
-      width: 100%;
-      height: 100%;
-    }
-
-    .plot-loader {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      background: var(--bg);
-      z-index: 10;
-      transition: opacity 0.5s;
-    }
-
-    .plot-loader.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .visualize-footer {
-      padding-top: 1.5rem;
-      color: var(--text-dim);
-      font-size: 0.9rem;
-      text-align: center;
-    }
-
-    /* Override Plotly defaults for dark mode */
-    .js-plotly-plot .plotly .modebar {
-      background-color: transparent !important;
+    .sketch-btn.active {
+      background: var(--ink-blue);
+      color: #fff;
     }
   </style>
 
@@ -182,5 +53,17 @@
     };
   </script>
   <script src="/static/js/visualizer.js"></script>
+  <script>
+    // ── Theme Toggle ──────────────────────────────────────────────────────────
+    const themeToggle = document.getElementById("theme-toggle");
+    const currentTheme = localStorage.getItem("wikirace.theme") || "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    
+    themeToggle.addEventListener("click", () => {
+      const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("wikirace.theme", newTheme);
+    });
+  </script>
 </body>
 </html>

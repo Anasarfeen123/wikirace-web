@@ -3,106 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WikiRace — Knowledge Resources</title>
+  <title>WikiRace — Knowledge Resources (Sketched)</title>
   <link rel="icon" type="image/png" href="/static/logo.png" />
-  <meta property="og:title" content="WikiRace — Resources" />
-  <meta property="og:image" content="/static/thumbnail.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="links-page">
-  <div class="bg-grid"></div>
-  <div class="home-aurora" aria-hidden="true"></div>
-  <div class="perspective-grid" aria-hidden="true"></div>
+  <div style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;">
+    <button id="theme-toggle" class="sketch-btn" style="font-size: 0.9rem; padding: 5px 12px;">Toggle Ink</button>
+  </div>
 
   <main class="links-main">
-    <header class="links-header">
-      <a href="/" class="btn-back" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--text-muted); font-weight: 600; margin-bottom: 2rem;">
-        <span class="btn-arrow">←</span>
-        <span>Back to Race</span>
-      </a>
-      <h1 class="links-title">Resources</h1>
-      <p class="links-subtitle">Explore the digital architecture and external intelligence nodes of the WikiRace network.</p>
+    <header class="home-header">
+      <h1 class="logo-sketch" style="font-size: 3rem; border-color: var(--ink-blue);">The Archive</h1>
+      <p class="tagline-sketch">External intelligence nodes & mission data.</p>
+      <nav style="margin-top: 1rem; display: flex; gap: 1.5rem; justify-content: center;">
+        <a href="/" class="hand-written">← Back to Menu</a>
+      </nav>
     </header>
 
-    <div class="links-grid">
-      <!-- Link 1: Embedding Projector -->
-      <a href="https://projector.tensorflow.org/" target="_blank" class="link-card">
-        <div class="link-image">
-          <div class="link-image-placeholder">
-            <i data-lucide="layers" class="link-icon"></i>
-          </div>
-        </div>
-        <div class="link-content">
-          <h2 class="link-card-title">Embedding Projector</h2>
-          <p class="link-card-desc">Google's high-dimensional data visualization tool. Explore how machine learning models perceive semantic relationships.</p>
-          <div class="link-card-footer">Launch Projector</div>
-        </div>
+    <div class="margin-bottom-md" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px;">
+      
+      <!-- Link 1 -->
+      <a href="https://projector.tensorflow.org/" target="_blank" class="sketch-box" style="text-decoration: none; color: inherit; transform: rotate(1deg);">
+        <h2 style="font-size: 1.5rem; color: var(--ink-blue); margin-bottom: 10px;">DATA PROJECTOR</h2>
+        <p style="font-size: 0.9rem; color: var(--ink);">High-dimensional visualization tool. See how models "think" about words.</p>
+        <div class="hand-written margin-top-sm" style="text-decoration: underline; color: var(--ink-blue);">[ ACCESS NODE ]</div>
       </a>
 
-      <!-- Link 2: Embedding Visualizer -->
-      <a href="https://embeddings.reiniss.com/" target="_blank" class="link-card">
-        <div class="link-image">
-          <div class="link-image-placeholder">
-            <i data-lucide="search" class="link-icon"></i>
-          </div>
-        </div>
-        <div class="link-content">
-          <h2 class="link-card-title">Word Embeddings</h2>
-          <p class="link-card-desc">An interactive visualizer for word embeddings, allowing for deep exploration of linguistic clusters and vector space.</p>
-          <div class="link-card-footer">Explore Vectors</div>
-        </div>
+      <!-- Link 2 -->
+      <a href="https://embeddings.reiniss.com/" target="_blank" class="sketch-box" style="text-decoration: none; color: inherit; transform: rotate(-1.5deg);">
+        <h2 style="font-size: 1.5rem; color: var(--ink-blue); margin-bottom: 10px;">WORD VECTORS</h2>
+        <p style="font-size: 0.9rem; color: var(--ink);">Explore linguistic clusters and the hidden geometry of language.</p>
+        <div class="hand-written margin-top-sm" style="text-decoration: underline; color: var(--ink-blue);">[ ACCESS NODE ]</div>
       </a>
 
-      <!-- Link 3: AI Wiki Embeddings -->
-      <a href="https://aiwiki.ai/wiki/embeddings" target="_blank" class="link-card">
-        <div class="link-image">
-          <div class="link-image-placeholder">
-            <i data-lucide="book-open" class="link-icon"></i>
-          </div>
-        </div>
-        <div class="link-content">
-          <h2 class="link-card-title">AI Wiki: Embeddings</h2>
-          <p class="link-card-desc">A comprehensive guide to the theory and implementation of embeddings within modern artificial intelligence.</p>
-          <div class="link-card-footer">Read Theory</div>
-        </div>
+      <!-- Link 3 -->
+      <a href="https://aiwiki.ai/wiki/embeddings" target="_blank" class="sketch-box" style="text-decoration: none; color: inherit; transform: rotate(0.5deg);">
+        <h2 style="font-size: 1.5rem; color: var(--ink-blue); margin-bottom: 10px;">AI THEORY</h2>
+        <p style="font-size: 0.9rem; color: var(--ink);">Deep dive into the mathematics and implementation of embeddings.</p>
+        <div class="hand-written margin-top-sm" style="text-decoration: underline; color: var(--ink-blue);">[ READ PAPERS ]</div>
       </a>
 
-      <!-- Link 4: GitHub Repository -->
-      <a href="https://github.com/Anasarfeen123/Wikirace" target="_blank" class="link-card">
-        <div class="link-image">
-          <div class="link-image-placeholder">
-            <i data-lucide="github" class="link-icon"></i>
-          </div>
-        </div>
-        <div class="link-content">
-          <h2 class="link-card-title">Project Repository</h2>
-          <p class="link-card-desc">Access the full source code, technical documentation, and development history of the Wikirace-web platform on GitHub.</p>
-          <div class="link-card-footer">View on GitHub</div>
-        </div>
+      <!-- Link 4 -->
+      <a href="https://github.com/Anasarfeen123/Wikirace" target="_blank" class="sketch-box" style="text-decoration: none; color: inherit; transform: rotate(-1deg);">
+        <h2 style="font-size: 1.5rem; color: var(--ink-blue); margin-bottom: 10px;">SOURCE CODE</h2>
+        <p style="font-size: 0.9rem; color: var(--ink);">The blueprints of this very sketchbook. Hosted on GitHub.</p>
+        <div class="hand-written margin-top-sm" style="text-decoration: underline; color: var(--ink-blue);">[ VIEW REPO ]</div>
       </a>
 
-      <!-- Link 5: Canva Presentation -->
-      <a href="https://canva.link/r1rlm9rcxiu1vz7" target="_blank" class="link-card">
-        <div class="link-image">
-          <div class="link-image-placeholder">
-            <i data-lucide="layout" class="link-icon"></i>
-          </div>
-        </div>
-        <div class="link-content">
-          <h2 class="link-card-title">Project Overview</h2>
-          <p class="link-card-desc">A visual presentation detailing the design language, technical architecture, and project goals of the WikiRace network.</p>
-          <div class="link-card-footer">View Presentation</div>
-        </div>
+      <!-- Link 5 -->
+      <a href="https://canva.link/r1rlm9rcxiu1vz7" target="_blank" class="sketch-box" style="text-decoration: none; color: inherit; transform: rotate(1.2deg);">
+        <h2 style="font-size: 1.5rem; color: var(--ink-blue); margin-bottom: 10px;">PRESENTATION</h2>
+        <p style="font-size: 0.9rem; color: var(--ink);">Visual overview of the project architecture and design goals.</p>
+        <div class="hand-written margin-top-sm" style="text-decoration: underline; color: var(--ink-blue);">[ OPEN SLIDES ]</div>
       </a>
+
     </div>
-  </main>
 
-  <script src="/static/js/background.js"></script>
+    <div class="sketch-box margin-top-lg" style="background: var(--highlighter); border-color: var(--ink-red);">
+      <h3 style="color: var(--ink-red);">NOTE FOR RESEARCHERS:</h3>
+      <p style="color: var(--ink);">All data points are real-time extractions from the Wikimedia Foundation APIs. This UI is a visual interpretation layer designed for tactile exploration.</p>
+    </div>
+
+  </main>
   <script>
-    lucide.createIcons();
+    // ── Theme Toggle ──────────────────────────────────────────────────────────
+    const themeToggle = document.getElementById("theme-toggle");
+    const currentTheme = localStorage.getItem("wikirace.theme") || "light";
+    document.documentElement.setAttribute("data-theme", currentTheme);
+    
+    themeToggle.addEventListener("click", () => {
+      const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("wikirace.theme", newTheme);
+    });
   </script>
 </body>
 </html>
